@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/user";
 import connectDatabase from "@/lib/database";
-import { getDataFromToken } from "@/lib/utils";
 
 //connect to the database
 connectDatabase();
@@ -19,7 +18,7 @@ const findUser = async (_id: any): Promise<any> => {
   }
 };
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { id } = body;

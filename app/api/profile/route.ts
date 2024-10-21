@@ -30,8 +30,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ status: true, data: user });
   } catch (error: any) {
     return NextResponse.json(
-      { status: false, message: error.message },
-      { status: 400 }
+      { status: false, message: error.message }
     );
   }
 }
