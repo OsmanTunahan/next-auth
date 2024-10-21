@@ -17,30 +17,31 @@ const createNewUser = async (data: IData) => {
   }
 };
 
-export default async function handler(req: NextRequest, res: NextResponse) {
-  const { email, password, username, avatar } = await req.json();
-  if (!email || !password || !username) {
-    return NextResponse.json(
-      { status: false, message: "Email, password and username are required" },
-      { status: 400 }
-    );
-  }
-
+export async function POST(req: NextRequest) {
   try {
-    const newUser = await createNewUser({
-      email,
-      password,
-      username,
-      avatar,
-    });
+    const body = await req.json();
+    const { email, password, username, avatar } = body;
+
+    if (!email || !password || !username) {
+      return NextResponse.json(
+        { status: false, message: "Email, password, and username are required" },
+        { status: 400 }
+      );
+    }
+
+    const newUser = await createNewUser({ email, password, username, avatar });
 
     return NextResponse.json({ status: true, data: newUser });
   } catch (error: any) {
+    if (error.message === "Unexpected end of JSON input") {
+      return NextResponse.json(
+        { status: false, message: "Invalid or missing JSON body" },
+        { status: 400 }
+      );
+    }
     return NextResponse.json(
       { status: false, message: error.message },
       { status: 500 }
     );
   }
 }
-
-export { handler as POST };
