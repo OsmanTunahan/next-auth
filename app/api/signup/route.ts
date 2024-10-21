@@ -14,8 +14,22 @@ interface IData {
 
 const createNewUser = async (data: IData) => {
   try {
+    //check if user already exists
+    if (!(await checkExistingUser(data.email))) {
+      throw new Error("User already exists");
+    }
+
     const user = new User(data);
     return await user.save();
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+const checkExistingUser = async (email: string) => {
+  try {
+    const findUser = await User.findOne({ email });
+    return !findUser;
   } catch (error: any) {
     throw new Error(error.message);
   }
