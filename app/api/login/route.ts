@@ -30,12 +30,7 @@ export async function POST(req: NextRequest) {
     }
 
     const newToken = jwt.sign(
-      {
-        _id: user?._id,
-        username: user?.username,
-        email: user?.email,
-        avatar: user?.avatar,
-      },
+      { _id: user?._id },
       process.env.ACCESS_TOKEN_SECRET!,
       {
         expiresIn: "1h",
@@ -43,16 +38,19 @@ export async function POST(req: NextRequest) {
       }
     );
 
-    return NextResponse.json({
-      status: true,
-      message: "Login successful",
-      token: newToken,
-    }, {
+    return NextResponse.json(
+      {
+        status: true,
+        message: "Login successful",
+        token: newToken,
+      },
+      {
         status: 200,
         headers: {
           "Set-Cookie": `access_token=${newToken}; HttpOnly; Path=/; Max-Age=604800; SameSite=Strict; Secure;`,
         },
-    });
+      }
+    );
   } catch (error: any) {
     if (error.message === "Unexpected end of JSON input") {
       return NextResponse.json(
