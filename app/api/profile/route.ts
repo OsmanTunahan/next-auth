@@ -21,6 +21,10 @@ const findUser = async (_id: any): Promise<any> => {
 
 export async function GET(req: NextRequest) {
   try {
+    if (!req.cookies.get("access_token")) {
+      throw new Error("You are not logged in");
+    }
+    
     const userData = getDataFromToken(req);
     const user = await findUser({ _id: userData });
     return NextResponse.json({ status: true, data: user });
