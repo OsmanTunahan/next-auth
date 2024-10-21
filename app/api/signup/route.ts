@@ -41,10 +41,7 @@ export async function POST(req: NextRequest) {
     const { email, password, username, avatar } = body;
 
     if (!email || !password || !username) {
-      return NextResponse.json(
-        { status: false, message: "Email, password, and username are required" },
-        { status: 400 }
-      );
+      throw new Error("Email, password, and username are required");
     }
 
     const newUser = await createNewUser({ email, password, username, avatar });
@@ -59,7 +56,7 @@ export async function POST(req: NextRequest) {
     }
     return NextResponse.json(
       { status: false, message: error.message },
-      { status: 500 }
+      { status: 400 }
     );
   }
 }

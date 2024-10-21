@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       { status: false, message: error.message },
-      { status: 500 }
+      { status: 400 }
     );
   }
 }
