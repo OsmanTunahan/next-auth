@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/user";
+import connectDatabase from "@/lib/database";
+
+//connect to the database
+connectDatabase();
 
 interface IData {
   username: string;
