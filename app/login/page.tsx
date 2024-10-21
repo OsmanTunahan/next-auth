@@ -9,7 +9,7 @@ import axios from "axios";
 export default function Login() {
   const [user, setUser] = useState({
     email: "",
-    password: ""
+    password: "",
   });
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const router = useRouter();
@@ -18,7 +18,7 @@ export default function Login() {
     try {
       const response = await axios.post("/api/login", user);
       if (response.data?.status !== true) {
-        toast.error(response.data.message);
+        toast.error("Invalid email or password");
         return;
       }
 
