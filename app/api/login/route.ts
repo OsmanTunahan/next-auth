@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/user";
 import connectDatabase from "@/lib/database";
+import jwt from "jsonwebtoken";
 
 //connect to the database
 connectDatabase();
@@ -23,11 +24,35 @@ export async function POST(req: NextRequest) {
       throw new Error("Email and password are required");
     }
 
-    if (!(await checkUser(email, password))) {
+    const user = await checkUser(email, password);
+    if (!user) {
       throw new Error("User does not exist");
     }
 
-    return NextResponse.json({ status: true });
+    const newToken = jwt.sign(
+      {
+        _id: user?._id,
+        username: user?.username,
+        email: user?.email,
+        avatar: user?.avatar,
+      },
+      process.env.ACCESS_TOKEN_SECRET!,
+      {
+        expiresIn: "1h",
+        algorithm: "HS256",
+      }
+    );
+
+    return NextResponse.json({
+      status: true,
+      message: "Login successful",
+      token: newToken,
+    }, {
+        status: 200,
+        headers: {
+          "Set-Cookie": `access_token=${newToken}; HttpOnly; Path=/; Max-Age=604800; SameSite=Strict; Secure;`,
+        },
+    });
   } catch (error: any) {
     if (error.message === "Unexpected end of JSON input") {
       return NextResponse.json(
