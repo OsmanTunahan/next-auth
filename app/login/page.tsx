@@ -19,7 +19,8 @@ export default function Login() {
       try {
         const response = await axios.get("/api/profile");
         if (response.data?.status === true) {
-          router.push("/profile");
+          toast.success("You are already logged in, redirecting...");
+          setTimeout(() => router.push("/profile"), 1500);
         }
       } catch (error: any) {
         console.error("Error:", error.message);
