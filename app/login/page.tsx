@@ -14,6 +14,21 @@ export default function Login() {
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const router = useRouter();
 
+useEffect(() => {
+    const checkLoginStatus = async () => {
+        try {
+            const response = await axios.get("/api/profile");
+            if (response.data?.status === true) {
+                router.push("/profile");
+            }
+        } catch (error: any) {
+            console.error("Error:", error.message);
+        }
+    };
+
+    checkLoginStatus();
+}, []);
+
   const onLogin = async () => {
     try {
       const response = await axios.post("/api/login", user);
